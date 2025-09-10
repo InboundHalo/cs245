@@ -6,4 +6,4 @@
 (define (collinear x1 y1 x2 y2 x3 y3) (= (slope x1 y1 x2 y2) (slope x2 y2 x3 y3)))
 
 ;; returns the slope of a line
-(define (slope x1 y1 x2 y2) (/(- x2 x1) (- y2 y1)))t2
+(define (slope x1 y1 x2 y2) (/(- x2 x1) (- y2 y1)))
