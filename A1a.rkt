@@ -9,7 +9,7 @@
 ;; checks if the number in the middle is the median
 (define (is_median x y z)
   (or
-   (and (< y z) (< x y))
-   (and (> y z) (> x y))
+   (and (<= y z) (<= x y))
+   (and (>= y z) (>= x y))
   )
 )
