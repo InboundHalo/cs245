@@ -5,9 +5,9 @@
 ;; will return true if all points fall in the same line
 (define (collinear x1 y1 x2 y2 x3 y3) (cond
                                         ;; Check for / by 0
-                                        [(and (= (- y2 y1) 0) (= (- y3 y1) 0)) true]
+                                        [(and (= (- y2 y1) 0) (= (- y3 y2) 0)) true]
                                         [(= (- y2 y1) 0) false]
-                                        [(= (- y3 y1) 0) false] 
+                                        [(= (- y3 y2) 0) false] 
                                         [else (= (slope x1 y1 x2 y2) (slope x2 y2 x3 y3))]))
 
 ;; returns the slope of a line
