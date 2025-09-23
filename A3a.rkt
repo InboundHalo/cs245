@@ -18,7 +18,7 @@
 (check-expect (sum-thing w) 36)
 (check-expect (sum-thing v) 36)
 (define (sum-thing input) (if (thing? input) (+ (sum-thing (thing-a input)) (sum-thing (thing-b input))) input))
-
+(check-expect (sum-thing (build-thing 1 256)) (sum-thing (build-thing-or-number 256)))
 
 
 (check-expect (build-thing 1 8) w)
@@ -30,7 +30,8 @@
    ))
 
 
-
+(check-expect (build-thing-or-number 8) v)
+(check-expect (build-thing-or-number 1) 1)
 (define (build-thing-or-number number)
   (if (= number 1) 1
     (build-compact-thing 1 number)
@@ -42,7 +43,7 @@
 
 (define (build-compact-thing low high)
   (if (= (add1 low) high) (make-thing low high)
-      (make-thing (build-compact-thing low (/ high 2)) (build-compact-thing (/ high 2) high))
+      (make-thing (build-compact-thing low (- (/ (+ low high) 2) 0.5)) (build-compact-thing (+ (/ (+ low high) 2) 0.5) high))
   ))
 
 
