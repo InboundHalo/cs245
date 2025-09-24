@@ -15,32 +15,29 @@
 (check-expect (tree-similar? full-node empty-node) false)
 (check-expect (tree-similar? full-node full-node) true)
 (define (tree-similar? tree1 tree2)
-  (cond [(tree-xnor tree1 tree2) true]
-        [(not (and (node? tree1) (node? tree2))) false]
-        [else (and (tree-similar? (node-left tree1) (node-right tree1)) (tree-similar? (node-left tree2) (node-right tree2)))]
-        ))
-
-(check-expect (tree-xnor empty-node empty-node) true)
-(check-expect (tree-xnor empty-node full-node) false)
-(check-expect (tree-xnor full-node empty-node) false)
-(check-expect (tree-xnor full-node full-node) true)
-(define (tree-xnor tree1 tree2) (xnor (is-tree-empty tree1) (is-tree-empty tree2)))
-
-(check-expect (xnor true true) true)
-(check-expect (xnor false false) true)
-(check-expect (xnor true false) false)
-(check-expect (xnor false true) false)
-(define (xnor bool1 bool2)
-  (cond [(and bool1 bool2) true]
-        [(and (not bool1) (not bool2)) true]
+  (cond [(are-both-trees-empty tree1 tree2) true]
+        [(are-both-trees-full tree1 tree2) (and (tree-similar? (node-left tree1) (node-left tree2)) (tree-similar? (node-right tree1) (node-right tree2)))]
         [else false]
         ))
+
+
+(check-expect (are-both-trees-empty empty-node empty-node) true)
+(check-expect (are-both-trees-empty empty-node full-node) false)
+(check-expect (are-both-trees-empty full-node empty-node) false)
+(check-expect (are-both-trees-empty full-node full-node) false)
+(define (are-both-trees-empty tree1 tree2) (and (is-tree-empty tree1) (is-tree-empty tree2)))
 
 (check-expect (is-tree-empty empty-node) true)
 (check-expect (is-tree-empty right-node) false)
 (check-expect (is-tree-empty left-node) false)
 (check-expect (is-tree-empty full-node) false)
-(define (is-tree-empty tree) (if (empty? tree) true (and (empty? (node-left tree)) (empty? (node-right tree)))))
+(define (is-tree-empty tree) (and (empty? (node-left tree)) (empty? (node-right tree))))
+
+(check-expect (are-both-trees-full empty-node empty-node) false)
+(check-expect (are-both-trees-full empty-node full-node) false)
+(check-expect (are-both-trees-full full-node empty-node) false)
+(check-expect (are-both-trees-full full-node full-node) true)
+(define (are-both-trees-full tree1 tree2) (and (not (is-tree-empty tree1)) (not (is-tree-empty tree2))))
 
 
 
