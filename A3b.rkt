@@ -42,4 +42,38 @@
 
 
 
-;(define (tree- tree) 
+(check-expect (tree-create 3) (make-node (make-node (make-node empty empty) empty) empty))
+(check-expect (tree-create 2) (make-node (make-node empty empty) empty))
+(check-expect (tree-create 1) (make-node empty empty))
+(define (tree-create n) (tree-create-help n empty-node))
+
+(define (tree-create-help nodes current-tree)
+  (if (= nodes 1) current-tree
+      (tree-create-help (sub1 nodes) (make-node current-tree empty))
+      ))
+
+
+
+(check-expect (tree-create-c 3) (make-node empty (make-node empty (make-node empty empty))))
+(check-expect (tree-create-c 2) (make-node empty (make-node empty empty)))
+(check-expect (tree-create-c 1) (make-node empty empty))
+(define (tree-create-c n) (tree-create-c-help n empty-node))
+
+(define (tree-create-c-help nodes current-tree)
+  (if (= nodes 1) current-tree
+      (tree-create-c-help (sub1 nodes) (make-node empty current-tree))
+      ))
+
+
+
+(check-expect (tree-create-d 3) (make-node (make-node empty (make-node empty empty)) empty))
+(check-expect (tree-create-d 2) (make-node (make-node empty empty) empty))
+(check-expect (tree-create-d 1) (make-node empty empty))
+(define (tree-create-d n) (tree-create-d-help n empty-node))
+
+(define (tree-create-d-help nodes current-tree)
+  (cond [(= nodes 1) current-tree]
+        [(even? nodes) (tree-create-d-help (sub1 nodes) (make-node current-tree empty))]
+        [else (tree-create-d-help (sub1 nodes) (make-node empty current-tree))]
+      ))
+
