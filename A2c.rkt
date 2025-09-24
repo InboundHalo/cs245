@@ -15,22 +15,13 @@
 (check-expect (coprime? 8 9) true)
 (check-expect (coprime? 6 9) false)
 (define (coprime? number1 number2)
-  (check-coprime number1 number2 2)
+  (= (greatest-common-denominator number1 number2) 1)
   )
 
-(check-expect (check-coprime 3 4 2) true)
-(check-expect (check-coprime 15 20 6) true) ;; there should not be a common factor after 5
-(check-expect (check-coprime 8 9 2) true)
-(check-expect (check-coprime 6 9 3) false)
-;; factor-to-check must be > 1 and < both number1 & number2
-(define (check-coprime number1 number2 factor-to-check)
-  (if (or (= factor-to-check number1) (= factor-to-check number2)) true
-      (if (and (divides-number number1 factor-to-check) (divides-number number2 factor-to-check)) false
-          (check-coprime number1 number2 (add1 factor-to-check))
-      )))
-
-(check-expect (divides-number 4 2) true)
-(check-expect (divides-number 3 2) false)
-(check-expect (divides-number 5 2) false)
-(check-expect (divides-number 16 4) true)
-(define (divides-number number dividor) (= (remainder number dividor) 0))
+(check-expect (greatest-common-denominator 3 4) 1)
+(check-expect (greatest-common-denominator 15 20) 5)
+(check-expect (greatest-common-denominator 8 9) 1)
+(check-expect (greatest-common-denominator 6 9) 3)
+;; Euclid's algorithm
+(define (greatest-common-denominator number1 number2)
+  (if (= number2 0) number1 (greatest-common-denominator number2 (remainder number1 number2))))
