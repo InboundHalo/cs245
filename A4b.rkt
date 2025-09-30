@@ -18,47 +18,41 @@
         [(= (node-key t) n) t]
         [(> (node-key t) n)
          (if (empty? (node-left t))
-             (make-node (make-node empty empty n) (node-right t) (node-key t)) ;; insert n in node
-             (make-node (insert-bst (node-left t) n) (node-right t) (node-key t)) ;; call insert-bst and set the current node to it's result
-             )]
-        [else ;; <
+             (make-node (make-node empty empty n) (node-right t) (node-key t))
+             (make-node (insert-bst (node-left t) n) (node-right t) (node-key t)))]
+        [else
          (if (empty? (node-right t))
-             (make-node (node-left t) (make-node empty empty n) (node-key t)) ;; insert n in node
-             (make-node (node-right t) (insert-bst (node-right t) n) (node-key t)) ;; call insert-bst and set the current node to it's result
-             )]
-        )
-  )
-
+             (make-node (node-left t) (make-node empty empty n) (node-key t))
+             (make-node (node-left t) (insert-bst (node-right t) n) (node-key t)))]))
 
 ;; bst t and a number n.
 ;; If n is not contained in t, delete-bst should return t.
 ;; If n is contained in t, delete-bst should return a bst containing every number contained in t, except n.
 ;; The number of steps to evaluate (delete-bst t n) should be linear in the height of t.
 (define (delete-bst t n)
-  (cond [(= (node-key t) n)
+  (cond [(empty? t) empty]
+        [(= (node-key t) n)
          (cond
            [(and (empty? (node-left t)) (empty? (node-right t))) empty]
            [(empty? (node-left t)) (node-right t)]
            [(empty? (node-right t)) (node-left t)]
-           [else (make-node (delete-bst (node-left t) (highest-value-bst (node-left t))) (node-right t) (highest-value-bst (node-left t)))] ;; TODO 
-           )]
+           [else (make-node (delete-bst (node-left t) (highest-value-bst (node-left t))) (node-right t) (highest-value-bst (node-left t)))])]
         [(> (node-key t) n)
          (if (empty? (node-left t))
              t
-             (make-node (insert-bst (node-left t) n) (node-right t) (node-key t)) ;; call insert-bst and set the current node to it's result
-             )]
-        [else ;; <
+             (make-node (delete-bst (node-left t) n) (node-right t) (node-key t)))]
+        [else
          (if (empty? (node-right t))
              t
-             (make-node (node-right t) (insert-bst (node-right t) n) (node-key t)) ;; call insert-bst and set the current node to it's result
+             (make-node (node-left t) (delete-bst (node-right t) n) (node-key t))
              )]
-            
         )
   )
 
 (define (highest-value-bst t)
-  (if (empty? (node-right t)) (node-key t) (highest-value-bst (node-right t)))
-  )
+  (if (empty? (node-right t))
+      (node-key t)
+      (highest-value-bst (node-right t))))
 
 (check-expect (combine-bst empty-node-5 empty-node-4) (combine-bst empty-node-4 empty-node-5))
 (check-expect (combine-bst empty-node-5 empty-node-4) (insert-bst empty-node-5 4))
