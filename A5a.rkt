@@ -12,12 +12,10 @@
 (check-expect (take (list 1 2 3 4 5 6 7) 3) (list 1 2 3))
 (check-expect (take (list 1 5 2 4 5 6 7) 3) (list 1 5 2))
 
-(define (take lst n) (take-helper lst n empty))
+(define (take lst n) (if (= n 0) empty
+                         (cons (first lst) (take (rest lst) (sub1 n)))))
 
-(define (take-helper lst n output) (cond
-                                     [(= n 0) output]
-                                     [else (take-helper (rest lst) (sub1 n) (cons (first lst) output))]
-                                     ))
+
 
 ;; add the first number to a list. Then continue until we are out of numbers to add
 
