@@ -37,10 +37,6 @@
     (build-compact-thing 1 number)
   ))
 
-
-
-
-
 (define (build-compact-thing low high)
   (if (= (add1 low) high) (make-thing low high)
       (call-helper-build-compact-thing low high (/ (+ low high) 2))

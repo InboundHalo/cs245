@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname A3b) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname A3c) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 (define-struct node (left right))
 
 ;; For testing
@@ -80,7 +80,7 @@
   (cond [(= nodes 1) current-tree]
         [(even? nodes) (tree-create-d-help (sub1 nodes) (make-node current-tree empty))]
         [else (tree-create-d-help (sub1 nodes) (make-node empty current-tree))]
-      ))
+        ))
 
 (check-expect (tree-count 0) 1)
 (check-expect (tree-count 1) 1)
@@ -96,3 +96,39 @@
             (tree-count (- n 1 iteration)))
          (tree-count-helper n (add1 iteration))))
   )
+
+
+
+(define (tree-height tree)
+  (if (empty? tree) 0
+  (add1 (max (tree-height (node-left tree)) (tree-height (node-right tree))))
+  ))
+
+(define (tree-create-max n) (tree-create n))
+
+(define (tree-create-min n)
+  (if (= n 0) empty
+      (make-node
+       (tree-create-min (quotient n 2))
+       (tree-create-min (- (sub1 n) (quotient n 2)))
+      ))
+  )
+
+(define (build-compact-tree low high)
+    (if (= (add1 low) high) empty-node
+        (call-helper-build-compact-tree low high (/ (+ low high) 2))
+        ))
+
+  (define (call-helper-build-compact-tree low high mid)
+    (make-node (build-compact-tree low (- mid 0.5)) (build-compact-tree (+ mid 0.5) high))
+    )
+
+
+(define (tree-count-max n) (if (= n 0) 1 (expt 2 (sub1 n))))
+
+(define (tree-count-min n)
+  (cond [(<= n 1) 1]
+        [(odd? n) (* (tree-count-min (quotient (sub1 n) 2))
+                     (tree-count-min (quotient (sub1 n) 2)))]
+    [else (* 2 (tree-count-min (quotient n 2))
+             (tree-count-min (sub1 (quotient n 2))))]))
