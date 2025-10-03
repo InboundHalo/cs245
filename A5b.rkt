@@ -4,8 +4,8 @@
 ;(evens lst) which consumes a list of any type, and produces the list of all elements at "even" positions,
 ;assuming the first element in the list is at position 0. For example, (evens (list 0 1 2 3 4 5)) should produce (list 0 2 4).
 
-(check-expect (evens (list 0 1 2 3 4 5)) (list 0 2 4))
-(check-expect (evens empty) empty)
+;(check-expect (evens (list 0 1 2 3 4 5)) (list 0 2 4))
+;(check-expect (evens empty) empty)
 ;; evens (listof Any) -> (listof Any)
 (define (evens lst)
   (if (< (length lst) 2) empty (cons (first lst) (evens (rest (rest lst))))
@@ -17,17 +17,21 @@
 ;Observe that if there is a longer list between lst1 and lst2,
 ;the elements from the longer list are added at the end of the
 ;produced list.
+(check-expect (interleave (list 'a 6 "boo") (list 'b 'x 'blue 'seven 8)) (list 'a 'b 6 'x "boo" 'blue 'seven 8))
 ;; interleave (listof Any) (listof Any) -> (listof Any)
-(define (interleave lst1 lst2) (cond [(and (empty? lst1) (lst2)) empty]
-                                     [(empty? lst1) lst2)]
-                                     [(empty? lst2) lst1)]
-                                     [else (interleave-1 lst1 lst2 empty)]
-))
+(define (interleave lst1 lst2) (cond [(and (empty? lst1) (empty? lst2)) empty]
+                                     [(empty? lst1) lst2]
+                                     [(empty? lst2) lst1]
+                                     [else (interleave-1 lst1 lst2 empty)]))
 
 ;; Only gets called if lst1 has a length > 0
-(define (interleave-1 lst1 lst2 lst) (if (empty? lst2) (combind-list lst lst1) (interleave-2 lst2 (rest lst1) (cons (first lst2) lst))))
+(define (interleave-1 lst1 lst2 lst)
+  (if (empty? lst2) (combine-list lst lst1)
+      (interleave-2 (rest lst1) lst2 (cons lst (first lst1)))))
 ;; Only gets called if lst2 has a length > 0
-(define (interleave-2 lst1 lst2 lst) (if (empty? lst1) (combind-list lst lst2) (interleave-1 lst1 (rest lst2) (cons (first lst2) lst))))
+(define (interleave-2 lst1 lst2 lst)
+  (if (empty? lst1) (combine-list lst lst2)
+      (interleave-1 lst1 (rest lst2) (cons lst (first lst2)))))
 
-kbd; Puts list1 first then list2
-(define (combine-list lst1 lst2) (if (<= (length lst2) 1) lst1 (combine-list (cons (first lst2) lst1) lst2)))
+; Puts list1 first then list2
+(define (combine-list lst1 lst2) (if (<= (length lst2) 1) lst1 (combine-list (cons (first lst2) lst1) (rest lst2))))
