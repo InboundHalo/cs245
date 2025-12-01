@@ -1,0 +1,1 @@
+("8.16" ta6le ("e2c00e7ebef5ee9cb60e12e12c040362ed698b42" . "644bf93be00ee49c13efb8067a04c24612f2e4d3") #"/home/kieran/Documents/cs145/stream.rkt" (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

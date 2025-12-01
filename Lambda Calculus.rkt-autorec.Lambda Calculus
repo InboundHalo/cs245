@@ -1,0 +1,75 @@
+#lang lazy
+
+(define True (Î»(x y) x)) ;; uncurried form.  In curried form: (Î»(x) (Î»(y) x))
+(define False (Î»(x y) y))
+(define Display (Î»(b) (b 'true 'false)))
+
+(define If (Î»(b t f) (b t f)))
+
+(define Cons (Î»(a b) (Î» (s) (s a b))))
+(define First (Î»(c) (c True)))
+(define Rest (Î»(c) (c False)))
+(define Empty (Î»(c) True))
+(define Empty? (Î»(c) (c (Î»(x y) False))))
+
+(define x (Cons True (Cons False (Cons True Empty))))
+(define y (Cons True (Cons True (Cons True Empty))))
+
+(define And-list
+  (Î»(lst) (If (Empty? lst)
+              True
+              (If (First lst) (And-list (Rest lst)) False))))
+
+
+;;; don't use recursion, but let's use multi-parameter functions
+
+(define And-list-helper
+  (Î»(self lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) (self self (Rest lst)) False))))
+(define And-list1 (Î»(lst) (And-list-helper And-list-helper lst)))
+
+;; get real with Î»-calculus
+
+(define And-curry-helper 
+   (Î»(self) (Î» (lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) ((self self) (Rest lst)) False)))))
+(define And-list-curry
+  (And-curry-helper And-curry-helper))
+
+
+
+;; beta-reduction
+(define And-curry-no-helper
+  ((Î»(self) (Î» (lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) ((self self) (Rest lst)) False))))
+   (Î»(self) (Î» (lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) ((self self) (Rest lst)) False))))))
+
+
+;; abstract away the And
+(define Abstract-curry-no-helper
+  (Î»(f)
+    ((Î»(self) (f (self self)))
+     (Î»(self) (f (self self))))))
+
+(define And-abstracted
+  (Abstract-curry-no-helper
+   (Î»(And-lst)
+     (Î»(lst) (If (Empty? lst)
+                 True
+                 (If (First lst)
+                     (And-lst (Rest lst))
+                     False))))))
+                 
+;; MY CODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
+(define AND (λ(b n) (b (n (λ(x y) x) (λ(x y) y)) (λ(x y) y))))
+(define NOT (λ(b) (b (λ(x y) y) (λ(x y) x))))
+(define OR (λ(a b) (a (λ(x y) x) (b (λ(x y) x) (λ(x y) y)))))
+
+
+(define And-list (λ(lst) (if (OR (Empty? lst) (AND (first lst) (And-list (rest lst)))) True False)))

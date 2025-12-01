@@ -1,0 +1,1 @@
+("8.16" ta6le ("9d534df711138b0307ec19f5e11b79d213e5c3d6" . "c2ba37498ac8d140c635afcd7314f185f816cd6a") #"/home/kieran/Documents/cs145/total-order.rkt" (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

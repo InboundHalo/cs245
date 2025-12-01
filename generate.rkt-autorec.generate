@@ -1,0 +1,31 @@
+#lang racket
+
+(provide generate)
+
+(define (generate initial done? step final)
+  (local
+    [(define (gen initial)
+      (cond 
+        [(done? initial) (final initial)]
+        [else  (gen (step initial))]))]
+  (gen initial)))
+
+
+(define (prime? n) (generate
+                    2
+                    (λ(x) (or (> (* x x) n) (= 0 (remainder n x))))
+                    (λ(x) (add1 x))
+                    (λ(x) (> (* x x) n))
+                    ))
+
+(define (my-build-list n f) (generate
+                             empty
+                             (λ(x) (= (length x) n))
+                             (λ(x) (cons (f (- n (length x) 1)) x))
+                             (λ(x) x)))
+
+(define (my-foldl f z l) (generate (cons z l)
+                                   (λ(x) (empty? (rest (rest x))))
+                                   (λ(x) (cons (f (first x) (second x)) (rest (rest x))))
+                                   (λ(x) (f (first x) (second x)))))
+

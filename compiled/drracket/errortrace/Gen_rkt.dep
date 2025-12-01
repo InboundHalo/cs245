@@ -1,0 +1,1 @@
+("8.18" ta6le ("60fd17e3286f6ff29ec422d37ed1a2ac0af7333a" . "484084dcb9cd0ea8a7265487e359e1fcdedc8137") #"/home/kieran/Documents/cs145/IOStream.rkt" (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"lazy" #"lang" #"reader.rkt") (collects #"lazy" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

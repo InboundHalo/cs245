@@ -1,0 +1,82 @@
+#lang lazy
+
+(define True (λ(x y) x)) ;; uncurried form.  In curried form: (λ(x) (λ(y) x))
+(define False (λ(x y) y))
+(define Display (λ(b) (b 'true 'false)))
+
+(define If (λ(b t f) (b t f)))
+
+(define Cons (λ(a b) (λ (s) (s a b))))
+(define First (λ(c) (c True)))
+(define Rest (λ(c) (c False)))
+(define Empty (λ(c) True))
+(define Empty? (λ(c) (c (λ(x y) False))))
+
+(define x (Cons True (Cons False (Cons True Empty))))
+(define y (Cons True (Cons True (Cons True Empty))))
+
+(define And-list
+  (λ(lst) (If (Empty? lst)
+              True
+              (If (First lst) (And-list (Rest lst)) False))))
+
+
+;;; don't use recursion, but let's use multi-parameter functions
+
+(define And-list-helper
+  (λ(self lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) (self self (Rest lst)) False))))
+(define And-list1 (λ(lst) (And-list-helper And-list-helper lst)))
+
+;; get real with λ-calculus
+
+(define And-curry-helper 
+   (λ(self) (λ (lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) ((self self) (Rest lst)) False)))))
+(define And-list-curry
+  (And-curry-helper And-curry-helper))
+
+
+
+;; beta-reduction
+(define And-curry-no-helper
+  ((λ(self) (λ (lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) ((self self) (Rest lst)) False))))
+   (λ(self) (λ (lst)  (If (Empty? lst)
+                    True
+                    (If (First lst) ((self self) (Rest lst)) False))))))
+
+
+;; abstract away the And
+(define Abstract-curry-no-helper
+  (λ(f)
+    ((λ(self) (f (self self)))
+     (λ(self) (f (self self))))))
+
+(define And-abstracted
+  (Abstract-curry-no-helper
+   (λ(And-lst)
+     (λ(lst) (If (Empty? lst)
+                 True
+                 (If (First lst)
+                     (And-lst (Rest lst))
+                     False))))))
+                 
+;; MY CODEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+
+(define AND (λ(b n) (b (n (λ(x y) x) (λ(x y) y)) (λ(x y) y))))
+(define NOT (λ(b) (b (λ(x y) y) (λ(x y) x))))
+(define OR (λ(a b) (a (λ(x y) x) (b (λ(x y) x) (λ(x y) y)))))
+
+
+(define Xor (λ(a b) (((a (b (λ(x y) x) (λ(x y) y)) (λ(x y) y)) (λ(x y) y) (λ(x y) x)) ((a (λ(x y) x) (b (λ(x y) x) (λ(x y) y))) (λ(x y) x) (λ(x y) y)) (λ(x y) y))))
+
+(Display (Xor True True))
+(Display (Xor True False))
+(Display (Xor False True))
+(Display (Xor False False))
+
+

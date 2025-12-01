@@ -1,0 +1,1 @@
+("8.16" ta6le ("f23b822697aa94efa4a0bc4c04987c888b889cb0" . "f0fbc97cae8f5ced63a358659c372b9ec25e093d") #"/home/kieran/Documents/cs145/scratchandwin.rkt" (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))
